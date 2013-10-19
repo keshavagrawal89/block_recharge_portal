@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block head %} Welcome {% endblock %}
+{% block custom_nav %}<a href="" onclick="document.getElementById('target_').submit(); return false;">Groups</a>{% endblock %}
+{% block content %}
+    <div class="center-div">
+        <div class="center-div circle" id="call-ico" name="call-ico">
+            <a href="#" data-scroll-nav="0"><img src="/site_media/images/012.png"/></a>
+        </div>
+
+		<h3>Groups</h3>
+		<div id="group-div" name="group-div" class="grp-div">
+			<form action="/manage_group/" method="POST" name="group-form" id="group-form" enctype="multipart/form-data">
+				{% csrf_token %}
+				<p>Group Name: <input type="text" name="grp-text" id="grp-text" /></p>
+				<p>Numbers: Enter numbers in <a href="http://www.computerhope.com/jargon/c/csv.htm" target="_new">csv</a> format or upload a csv file.</p>
+				<p><textarea name="numbers" id="numbers" classs="group-numbers-input" rows="7" cols="40" placeholder="123XXXXXXX,91XXXXXXXXXX,..."></textarea></p>
+				<p><input type="file" name="grp-numbers-file" id="grp-numbers-file" /></p>
+				<button type="submit" value="Save" name="save" id="save" class="save-btn">Save</button>
+				<input type="hidden" value={{user.username}} name="user_" id="user_" />
+			</form>
+	        <form id="target_" action="/groups/" method="POST">
+        	    {% csrf_token %}
+    	        <input type="hidden" id="user_" name="user_" value={{user.username}} />
+	        </form>
+		</div>
+
+		<div id="existing-groups" name="existing-groups" class="exst-grp-div">
+		<h4>Existing Groups of yours:</h4>
+		<ul>
+		{% for grp in user_groups %}
+			<li>{{grp}}</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endblock %}

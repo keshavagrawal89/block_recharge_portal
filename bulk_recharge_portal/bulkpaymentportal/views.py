@@ -10,8 +10,10 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib.auth.views import password_reset
 from bulkpaymentportal.forms import *
+from bulkpaymentportal.models import *
 import logging
-
+import uuid
+import csv
 
 def main_page(request):
 
@@ -25,18 +27,18 @@ def main_page(request):
     return render_to_response('main_page.html', RequestContext(request, variables))
 
 
-
+# Will be used as to prepare dashboard
 def user_page(request, username):
     try:
         user = User.objects.get(username=username)
     except:
         raise Http404('Requested user not found!')
 
-    bookmarks = user.bookmarks_set.all()
+    balance = user_account.objects.get('balance')
 
     variables = {
         'username':username.title(), #doing proper capitalization of the name.
-        'bookmarks':bookmarks
+        'balance': balance
     }
 
     return render_to_response('user_page.html', RequestContext(request, variables))
@@ -73,3 +75,73 @@ def register_page(request):
     return render_to_response('registration/register.html', variables)
 
 
+
+def forgot_password(request):
+    variables = {}
+    if request.method == 'POST':
+        return password_reset(request, from_email = request.POST.get('email'))
+    else:
+        return  render_to_response('registration/forgot_password.html', RequestContext(request, variables))
+
+
+def manage_groups(request):
+    if request.method == 'POST':
+        if (request.FILES['grp-numbers-file'] and request.POST.get('grp-text')):
+            name = request.POST.get('grp-text')
+            user_ = request.POST.get('user_')
+
+            # save the file from django in-memory to some path
+            to_be_read = save_file(request.FILES['grp-numbers-file'])
+
+            # Now reading the file
+            number_list = read_file(to_be_read)
+
+            # save the numbers in the db
+            save_in_db(number_list, name, user_)
+
+            user_groups = NumberGroups.objects.values_list('group_name', flat=True).filter(user_group_owner=User.objects.get(username=user_))
+            variables = {
+                'user_groups': user_groups,
+            }
+
+        return render_to_response('groups.html', RequestContext(request, variables))
+
+
+def show_groups(request):
+	if request.method == 'POST':
+			print "I am here"
+			user_ = request.POST.get('user_')
+			print user_
+			user_groups = NumberGroups.objects.values_list('group_name', flat=True).filter(user_group_owner=User.objects.get(username=user_))
+			print user_groups
+			variables = {
+				'user_groups': user_groups,
+			}
+	return render_to_response('groups.html', RequestContext(request, variables))
+
+
+def save_file(f):
+	print "I am in save_file"
+	tmp_file_name = 'userfile%s.csv' % uuid.uuid4()
+	file_path = 'tmp/%s' % tmp_file_name
+	with open(file_path, 'wb+') as destination:
+		for chunk in f.chunks():
+			destination.write(chunk)
+	return tmp_file_name
+
+
+def read_file(f):
+	file_path = 'tmp/%s' % f
+	with open(file_path, 'rb') as csvfile:
+		grp_numbers = csv.reader(csvfile)
+		group_numbers = ""
+		for line in grp_numbers:
+			grp_number = ",".join(str(ele) for ele in line)
+			group_numbers = group_numbers + "," + str(grp_number)
+			
+		return group_numbers.strip(',')
+
+
+def save_in_db(number_list, name, user_):
+	grp_number = NumberGroups(user_group_owner=User.objects.get(username=user_), group_name=name, saved_numbers=number_list)
+	grp_number.save()

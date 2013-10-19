@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     (r'^register/$', register_page),
     (r'^register/success/$', TemplateView.as_view(template_name="registration/register_success.html")),
     (r'^fpassword/$', forgot_password),
+	(r'^groups/$', show_groups),
+	(r'^manage_group/$', manage_groups),
     (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': site_media }),
     # Examples:
     # url(r'^$', 'django_bookmarks.views.home', name='home'),

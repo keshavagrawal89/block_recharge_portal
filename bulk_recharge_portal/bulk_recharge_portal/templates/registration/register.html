@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block head %} <span class="ora-font">Welcome to Bulk Recharge Portal</span> {% endblock %}
+
+{% block content %}
+{% load widget_tweaks %}
+	<br>
+	<div class="center-div padding-four">
+		<h1 class="ora-font">Come join us...</h1>
+	</div>
+	<div id = "register-div" class="padding-one center-div">
+		<form method="post" action=".">{% csrf_token %}
+			<p>
+				<label>Username</label>
+				{{form.username|attr:"data-validation:alphanumeric"|attr:"data-validation-error-msg:You did not enter a valid Username&#1769;"|attr:"data-validation-allowing:-_"|add_class:"reg-input"|attr:"placeholder:Username"}}
+			</p>
+			{% if form.username.errors %}
+			<p>
+				{% for error in form.username.errors %}
+					{{error}}
+				{% endfor %}
+			</p>
+			{% endif %}
+			</br>
+			<p>
+				<label>Password</label>
+				{{form.password1|attr:"data-validation:alphanumeric"|attr:"data-validation-error-msg:You did not enter a valid password&#1769;"|attr:"data-validation-allowing:-_"|add_class:"reg-input"|attr:"placeholder:[0-9a-b]-_.$%&*!@#"}}
+			</p>
+            </br>
+            <p>
+                <label>Confirm Password</label>
+                {{form.password2|attr:"data-validation:alphanumeric"|attr:"data-validation-error-msg:Please enter a valid password&#1769;"|attr:"data-validation-allowing:-_.$%&*!@#"|add_class:"reg-input"|attr:"placeholder:[0-9a-b]-_.$%&*!@#"}}
+            </p>
+            </br>
+            <p>
+                <label>Email</label>
+                {{form.email|attr:"data-validation:email"|attr:"data-validation-error-msg:Please enter a valid email&#1769;"|add_class:"reg-input"|attr:"placeholder:xyz@example.com"}}
+            </p>
+			<div class="center-div padding-one">
+				<button type="submit" value="register" class="class-register-btn register-btn">Register</button>
+			</div>
+		</form>
+	</div>
+	<div class="center-div padding-one">
+		<p>Already have an account? <a href="/login/" class="ora-link">Login here</a></p>
+	</div>
+	</br>
+	<script> $.validate(); </script>
+{% endblock %}

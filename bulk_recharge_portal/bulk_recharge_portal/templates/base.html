@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="/site_media/css/style.css" type="text/css" />
+		<link href='http://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/site_media/js/scrollIt.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.9/jquery.form-validator.min.js"></script>
+
+    <body>
+        <h1 style="text-align:center;">{% block head %}{% endblock %}</h1>
+        <div class="page-wrap">
+            <div id="navigation">
+                <div class="hard-navigation">
+					<a href="/">Home</a>
+					{% if user.is_authenticated %}
+					<a href="/dashboard/">Dashboard</a>
+					<a href="/send_bulk_recharge/">Bulk Recharge</a>
+					{% block custom_nav %}{% endblock %}
+					<a href="/logout/">Log out</a>
+					{% else %}
+					<a href="/login/">Login</a>
+					<a href="/register/">Register</a>
+					{% endif %}
+                </div>
+            </div>
+            <div class="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+	    <script>
+    	    $(function(){
+        	    $.scrollIt({
+					upKey: 38,             // key code to navigate to the next section
+					downKey: 40,           // key code to navigate to the previous section
+					easing: 'ease-out',      // the easing function for animation
+					scrollTime: 800,       // how long (in ms) the animation takes
+					activeClass: 'active', // class given to the active nav element
+					onPageChange: null,    // function(pageIndex) that is called when page is changed
+					topOffset: 0           // offste (in px) for fixed top navigation
+				});
+			});
+    </script>
+    </body>
+
+</html>

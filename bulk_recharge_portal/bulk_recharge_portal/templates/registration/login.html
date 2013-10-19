@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block head %} 
+	<div class="center-div logo">
+		<img src="/site_media/icons/black-cartoon/115850-magic-marker-icon-people-things-speech.png" class="logo"></img>
+	</div>
+	<div class="center-div logo-text">
+		Welcome to Bulk Recharge Portal!
+	</div>
+{% endblock %}
+{% block content %}
+		{% load widget_tweaks %}
+		<!-- Div element for login form starts here -->
+		<div style="padding-top:30px;" class="center-div">
+		<form action="." method = "post">
+		{% csrf_token %}
+		<table class = "center cell-padding">
+			<thead>
+				<tr><th colspan="2"><h2 class="ora-font">Login!</h2></th></tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan = "2">{{ form.username|add_class:"user-input"|attr:"placeholder:Username or email"|attr:"autofocus"|attr:"required" }}</td>
+				</tr>
+				<tr>
+					<td colspan="2">{{ form.password|add_class:"user-input"|attr:"placeholder:Password"|attr:"required" }}</td>
+				</tr>
+				<tr><td colspan="2">
+			        {% if form.errors %}
+            			<p>Your username and password didn't match. Please try again!</p>
+						</br>
+			        {% else %}					
+						</br></br>
+					{% endif %}
+						<button type="submit" value="login" class = "class-register-btn login-btn">Login</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="hidden" name="next" value="/" />
+		</form>
+		</div>
+		<!-- Div element for login form ends here -->
+		<div class="center-div ora-font">
+			<p><a href="/fpassword/" class="ora-link">Forgot Password?</a> | Don't have an account yet? <a href="/register/" class="ora-link">Register</a> now!</p>
+		</div>
+{% endblock %}
