@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block head %}
+{% if user.is_authenticated %}
+    Welcome {{user.username}}!
+{% else %}
+    Welcome
+{% endif %}
+{% endblock %}
+{% block custom_nav %}<a href="" onclick="document.getElementById('target_').submit(); return false;">Groups</a>{% endblock %}
+{% block content %}
+
+    <div class="center-div">
+        <div class="center-div circle" id="call-ico" name="call-ico">
+            <a href="#" data-scroll-nav="0"><img src="/site_media/images/012.png"/></a>
+        </div>
+
+		<div>
+			<form action="/charge_customer/" method="POST">
+				<p>Enter Amount:</p><input type="text" name="amount" id="amount" />
+			  <script
+			    src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+			    data-key="pk_test_czwzkTp2tactuLOEOqbMTRzG"
+			    data-amount="2000"
+			    data-name="Demo Site"
+			    data-description="2 widgets ($20.00)"
+			    data-image="/128x128.png">
+			  </script>
+			</form>
+		</div>
+
+
+	</div>
+    <div>
+        <form id="target_" action="/groups/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="user_" name="user_" value={{user.username}} />
+        </form>
+    </div>
+{% endblock %}
+

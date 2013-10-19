@@ -28,20 +28,40 @@ def main_page(request):
 
 
 # Will be used as to prepare dashboard
-def user_page(request, username):
-    try:
-        user = User.objects.get(username=username)
-    except:
-        raise Http404('Requested user not found!')
+def user_page(request):
+#    try:
+#        user = User.objects.get(username=username)
+#    except:
+#        raise Http404('Requested user not found!')
 
-    balance = user_account.objects.get('balance')
+#    balance = user_account.objects.get('balance')
 
     variables = {
-        'username':username.title(), #doing proper capitalization of the name.
-        'balance': balance
+ #       'username':username.title(), #doing proper capitalization of the name.
+ #       'balance': balance
     }
 
-    return render_to_response('user_page.html', RequestContext(request, variables))
+    return render_to_response('dashboard.html', RequestContext(request, variables))
+
+
+def charge_customer():
+	# dummy key
+	stripe.api_key = "sk_test_mkGsLqEW6SLnZa487HYfJVLf"
+
+	token = request.POST.get('stripeToken')
+	r_amount = request.POST.get('amount')
+
+	try:
+	  charge = stripe.Charge.create(
+    	  amount = r_amount,
+	      currency = "usd",
+    	  card = token,
+	      description = "xyz@syz.com"
+	  )
+	  logging.info("Charge created: %s" % str(charge))
+	except stripe.CardError, e:
+	  # The card has been declined
+	  pass
 
 
 def logout_page(request):
