@@ -14,6 +14,8 @@ from bulkpaymentportal.models import *
 import logging
 import uuid
 import csv
+import datetime
+import stripe
 
 def main_page(request):
 
@@ -50,6 +52,7 @@ def charge_customer():
 
 	token = request.POST.get('stripeToken')
 	r_amount = request.POST.get('amount')
+	user_ = request.POST.get('user_')
 
 	try:
 	  charge = stripe.Charge.create(
@@ -59,9 +62,72 @@ def charge_customer():
 	      description = "xyz@syz.com"
 	  )
 	  logging.info("Charge created: %s" % str(charge))
+
+	  update_payment_history(user_, r_amount)
+	  update_account_balance(user_, r_amount, "add")
+
 	except stripe.CardError, e:
 	  # The card has been declined
-	  pass
+	  logging.error("The card has been declined: %s" % e)
+
+
+
+def update_account_balance(user_, r_amount, operation):
+	r_amount = decimal.Decimal(r_amount)
+
+	user_current_balance = Credits.objects.values_list('account_balance', flat=True).filter(user=User.objects.get(username = user_))[0]
+
+	if operation == "add":
+		# If this is a first recharge. Right now by default account balance
+		# is not 0 and so the check...
+		if user_current_balance == None or user_current_balance == 0:
+			affected_row = Credits.objects.filter(user = User.objects.get(username = user_)).update(account_balance=r_amount)
+			if affected_row == 1:
+				logging.info("Account balance updated: %s" % r_amount)
+			else:
+				logging.error("Something got messed up!")
+		else:
+			affected_row = Credits.filter(user = User.objects.get(username = user_)).update(account_balance=r_amount + user_current_balance)
+            if affected_row == 1:
+                logging.info("Account balance updated: %s" % r_amount)
+            else:
+                logging.error("Something got messed up!")
+
+	elif operation == "deduct":
+        if user_current_balance == None or user_current_balance == 0:
+			r_amount = -r_amount
+            affected_row = Credits.filter(user = User.objects.get(username = user_))\
+							.update(account_balance=r_amount)
+            if affected_row == 1:
+                logging.info("Account balance updated: %s" % r_amount)
+            else:
+                logging.error("Something got messed up!")
+        else:
+            affected_row = Credits.filter(user = User.objects.get(username = user_))\
+							.update(account_balance=r_amount - user_current_balance)
+            if affected_row == 1:
+                logging.info("Account balance updated: %s" % r_amount)
+            else:
+                logging.error("Something got messed up!")
+
+def update_payment_history(user_, r_amount):
+	previous_balance = Credits.objects.values_list('account_balance', flat=True)\
+						.filter(user=User.objects.get(username=user_))[0]
+	try:
+		account_payment = AccountPayment(user = User.objects.get(username=user_),\
+							 previous_balance=previous_balance, \
+							after_balance=decimal.Decimal(r_amount + previous_balance), \
+							recharge_amount=r_amount)
+		account_payment.save()
+	except Exception, e:
+		logging.error("Woh! Something got screwed!")
+		system.exit(1)
+'''
+ id | user_id | previous_balance | after_balance | recharge_amount |       date_of_recharge        
+----+---------+------------------+---------------+-----------------+-------------------------------
+  1 |       2 |             0.00 |        100.00 |          100.00 | 2013-10-20 03:22:11.858189+00
+
+'''
 
 
 def logout_page(request):

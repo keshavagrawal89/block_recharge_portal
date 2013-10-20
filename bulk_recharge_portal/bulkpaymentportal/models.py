@@ -2,13 +2,31 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+# This is to keep the account_balance for each user.
+class Credits(models.Model):
+	user = models.ForeignKey(User)
+	account_balance = models.DecimalField(max_digits=5, decimal_places=2)
+	# Future account_type column for "PostPaid" or "PrePaid(default)"
+	account_type = models.CharField(max_length=8, default="Prepaid")
+
+
+# This model would serve as a record to store user payment history
+class AccountPayment(models.Model):
+	user = models.ForeignKey(User)
+	previous_balance = models.DecimalField(max_digits=5, decimal_places=2)
+	after_balance = models.DecimalField(max_digits=5, decimal_places=2)
+	recharge_amount = models.DecimalField(max_digits=5, decimal_places=2)
+	date_of_recharge = models.DateTimeField(auto_now_add=True)
+
+
+
 class User_account(models.Model):
 	user = models.ForeignKey(User)
 	# Current balance in the account.
 	balance = models.DecimalField(max_digits=5, decimal_places=2)
 	# Total number of 'bulk' recharges triggered till date.
 	recharges = models.BigIntegerField(max_length=999999999999999)
-	# date of bukj recharge triggered.
+	# date of bulk recharge triggered.
 	date_of_recharge = models.DateField()
 	comment = models.CharField(max_length=100)
 
