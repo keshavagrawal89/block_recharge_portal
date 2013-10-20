@@ -17,6 +17,7 @@
 		<div>
 			<form action="/charge_customer/" method="POST">
 				<p>Enter Amount:</p><input type="text" name="amount" id="amount" />
+				<input type="hidden" value={{user.username}} name="user_" id="user_" />
 			  <script
 			    src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
 			    data-key="pk_test_czwzkTp2tactuLOEOqbMTRzG"
