@@ -13,62 +13,62 @@ Some screenshots:
 
 
 
-Home:
+**Home:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/1.png)
 
-Description:
+**Description:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/2.png)
 
-Register:
+**Register:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/3.png)
 
-Dynamic Validation on loosing focus:
+**Dynamic Validation on loosing focus:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/4.png)
 
-Successful Registration:
+**Successful Registration:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/5.png)
 
-Login:
+**Login:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/6.png)
 
-Successful Login:
+**Successful Login:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/7.png)
 
-Groups:
+**Groups:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/8.png)
 
-Add Groups(upload a csv. Text Area is non functional as of now):
+**Add Groups(upload a csv. Text Area is non functional as of now):**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/9.png)
 
-After adding group:
+**After adding group:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/10.png)
 
-Make Payment:
+**Make Payment:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/11.png)
 
-Simple Stripe Gateway Integration:
+**Simple Stripe Gateway Integration:**
 
 
 ![alt tag](https://dl.dropboxusercontent.com/u/54579287/bulkrechargeportal/12.png)
