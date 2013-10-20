@@ -88,5 +88,8 @@ class NumberGroups(models.Model):
 	# Valid data = 1203567890, 918050420391, ...
 	saved_numbers = models.TextField()
 
-
+# We need to decide the priority which provider should be chosen.
+class RechargeProviderCountryPriority(models.Model):
+	priority = models.IntegerField(default=1)
+	country = models.ForeignKey(Countries)
 
