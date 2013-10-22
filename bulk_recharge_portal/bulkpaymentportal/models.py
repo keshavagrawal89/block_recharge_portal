@@ -22,10 +22,10 @@ class AccountPayment(models.Model):
 
 class User_account(models.Model):
 	user = models.ForeignKey(User)
-	# Current balance in the account.
-	balance = models.DecimalField(max_digits=5, decimal_places=2)
-	# Total number of 'bulk' recharges triggered till date.
-	recharges = models.BigIntegerField(max_length=999999999999999)
+	# Group_id of the group which was alloted a bulk recharge.
+	group_id = models.ForeignKey(NumberGroups)
+	# Recharge value of the bulk recharge.
+	recharge_value = models.BigIntegerField(max_length=999999999999999)
 	# date of bulk recharge triggered.
 	date_of_recharge = models.DateField()
 	comment = models.CharField(max_length=100)
@@ -37,6 +37,9 @@ class Recharge(models.Model):
 	recharge_value = models.DecimalField(max_digits=5, decimal_places=2)
 	date_of_reacharge = models.DateField()
 	triggered_by = models.ForeignKey(User)
+	# Either 'Pass' or 'Failed'
+	status = models.CharField(max_length=6)
+	
 
 
 class Countries(models.Model):
@@ -89,7 +92,19 @@ class NumberGroups(models.Model):
 	saved_numbers = models.TextField()
 
 # We need to decide the priority which provider should be chosen.
-class RechargeProviderCountryPriority(models.Model):
+'''class RechargeProviderCountryPriority(models.Model):
 	priority = models.IntegerField(default=1)
 	country = models.ForeignKey(Countries)
+'''
 
+# Based on the following models we can decide on the fly 
+# which guy is performing well at the moment.
+class NetworkOperatorPerformance():
+	operator = models.CharField(max_length=50)
+	country = models.ForeignKey(Countries)
+	# Restricting as of now to 100
+	total_group_numbers = models.IntegerField(max_value=999)
+	# How many got successfully recharged?
+	total_passed = models.IntegerField(max_value=999)
+	provider = models.ForeignKey(RechargeProvider)
+	
